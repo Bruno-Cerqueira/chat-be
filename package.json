@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "pris": "prisma migrate dev --preview-feature"
+    "pris": "prisma migrate dev --preview-feature",
+    "dev": "nodemon --watch 'src/' --exec 'ts-node src/index.ts' -e ts"
   },
   "repository": {
     "type": "git",
@@ -24,6 +25,7 @@
   "devDependencies": {
     "@types/express": "^4.17.13",
     "@types/node": "^17.0.31",
+    "nodemon": "^2.0.16",
     "prisma": "^3.13.0",
     "ts-node": "^10.7.0",
     "typescript": "^4.6.4"
