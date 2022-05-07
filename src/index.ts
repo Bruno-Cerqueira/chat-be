@@ -8,12 +8,11 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: true}))
 
 app.get('/users', async (req, res) => {
-
-  const users = await prisma.user.findMany()
-  res.json(users)
+  const users = await prisma.user.findMany();
+  res.json(users);
 })
 
-app.get('/rooms/:id', async (req, res) => {
+app.get('/rooms/:userId', async (req, res) => {
   const rooms = await prisma.room.findMany({
     include: {
       users: true
@@ -21,13 +20,12 @@ app.get('/rooms/:id', async (req, res) => {
     where: {
       users: {
         some: {
-          userId: +req.params.id
+          userId: +req.params.userId
         }
       }
     }
   })
-  console.log(rooms)
-  res.json(rooms)
+  res.json(rooms);
 })
 
 app.get('/room/:id', async (req, res) => {
@@ -36,7 +34,7 @@ app.get('/room/:id', async (req, res) => {
       id: +req.params.id
     }
   })
-  res.json(room)
+  res.json(room);
 })
 
 app.post('/room', async (req, res) => {
@@ -51,8 +49,32 @@ app.post('/room', async (req, res) => {
       }
     },
   })
+  res.json(room);
+})
 
-  res.json(room)
+app.get('/messages/:roomId', async (req, res) => {
+  const rooms = await prisma.message.findMany({
+    where: {
+      room: {
+        id: {
+          equals: +req.params.roomId,
+        }
+      }
+    }
+  })
+  res.json(rooms);
+})
+
+app.post('/message', async (req, res) => {
+  console.log(req.body)
+  const room = await prisma.message.create({
+    data: {
+      message: req.body.message,
+      authorId: req.body.authorId,
+      roomId: req.body.roomId,
+    },
+  })
+  res.json(room);
 })
 
 app.listen(3000, () =>

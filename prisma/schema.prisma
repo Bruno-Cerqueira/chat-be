@@ -40,4 +40,5 @@ model Message {
   authorId  Int?
   room    Room?   @relation(fields: [roomId], references: [id])
   roomId  Int?
+  createdAt        DateTime           @default(now())
 }
