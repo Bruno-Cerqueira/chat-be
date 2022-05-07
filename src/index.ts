@@ -1,11 +1,20 @@
 import { PrismaClient } from '@prisma/client'
 import express, { response } from 'express'
+import { createServer } from "http";
+import { Server } from "socket.io";
 
 const prisma = new PrismaClient()
 const app = express()
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: true}))
+
+const httpServer = createServer(app);
+const io = new Server(httpServer, { /* options */ });
+
+io.on("connection", (socket) => {
+  // ...
+});
 
 app.get('/users', async (req, res) => {
   const users = await prisma.user.findMany();
@@ -77,6 +86,6 @@ app.post('/message', async (req, res) => {
   res.json(room);
 })
 
-app.listen(3000, () =>
-  console.log('REST API server ready at: http://localhost:3000'),
-)
+httpServer.listen(3000, () => {
+  return console.log('REST API server ready at: http://localhost:3000')
+});
